@@ -1,83 +1,60 @@
 import * as React from "react"
-import { Text, View } from "react-native"
 import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import HomeScreen from "../screens/HomeScreen"
-import ProfileScreen from "../screens/ProfileScreen"
-import NotificationScreen from "../screens/NotificationsScreen"
-import ShoppingScreen from "../screens/ShoppingScreen"
 import Ionicons from "@expo/vector-icons/Ionicons"
-import { createStackNavigator } from "@react-navigation/stack"
-import MainNavigation from "../Navigation/MainNavigation"
+import NotificationStackScreen from "./NotificationStackScreen"
+import HomeStackScreen from "./HomeStackScreen"
+import ProfileStackScreen from "./ProfileStackScreen"
+import ShoppingStackScreen from "./ShoppingStackScreen"
 
-const BottomNavBar = () => {
-  const defaultStackNavOptions = {
-    headerStyle: {
-      backgroundColor: Platform.OS === "android" ? Colors.primaryColor : "",
-    },
-    headerTintColor: "white",
-    headerTitle: "A Screen",
-  }
+import ImageStackScreen from "./ImageStackScreen"
+
+const BottomNavBar = ({ navigation }) => {
   const Tab = createBottomTabNavigator()
 
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName
+    <NavigationContainer>
+      <Tab.Navigator
+        options={({ route }) => ({
+          title: route.params.name,
+        })}
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName
 
-          if (route.name === "Home") {
-            iconName = "home-outline"
-          } else if (route.name === "Profile") {
-            iconName = "person-circle-outline"
-          } else if (route.name === "Notifications") {
-            iconName = "notifications-outline"
-          } else if (route.name === "Shopping") {
-            iconName = "card-outline"
-          }
-          return <Ionicons name={iconName} size={size} color={color} />
-        },
-        headerStyle: {
-          backgroundColor: "#7fff00",
-        },
-      })}
-      tabBarOptions={{
-        activeTintColor: `#ff1493`,
-        inactiveTintColor: "grey",
-        showLabel: false,
-      }}
-    >
-      <Tab.Screen
-        name='Home'
-        component={HomeScreen}
-        options={{
-          title: "Home",
-          headerStyle: {
-            backgroundColor: "#f4511e",
+            if (route.name === "Home") {
+              iconName = "home-outline"
+            } else if (route.name === "Profile") {
+              iconName = "person-circle-outline"
+            } else if (route.name === "Notifications") {
+              iconName = "notifications-outline"
+            } else if (route.name === "Shopping") {
+              iconName = "card-outline"
+            } else if (route.name === "Image Upload") {
+              iconName = "image-outline"
+            }
+            return <Ionicons name={iconName} size={size} color={color} />
           },
-          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: "bold",
+            color: "#ff1493",
           },
-        }}
-      />
-      <Tab.Screen
-        name='Profile'
-        component={ProfileScreen}
-        options={{
-          title: "Profile",
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#7fff00",
           },
-          headerTintColor: "#fff",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
+        })}
+        tabBarOptions={{
+          activeTintColor: `#ff1493`,
+          inactiveTintColor: "grey",
+          showLabel: false,
         }}
-      />
-      <Tab.Screen name='Notifications' component={NotificationScreen} />
-      <Tab.Screen name='Shopping' component={ShoppingScreen} />
-    </Tab.Navigator>
+      >
+        <Tab.Screen name='Home' component={HomeStackScreen} />
+        <Tab.Screen name='Profile' component={ProfileStackScreen} />
+        <Tab.Screen name='Notifications' component={NotificationStackScreen} />
+        <Tab.Screen name='Shopping' component={ShoppingStackScreen} />
+        <Tab.Screen name='Image Upload' component={ImageStackScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
   )
 }
 

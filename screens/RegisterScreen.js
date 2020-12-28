@@ -1,11 +1,19 @@
 import React, { useEffect, useState, useContext } from "react"
 import { Context } from "../Context"
-import { View, Text, StyleSheet, TextInput, Button } from "react-native"
-// import { Dropdown } from "react-native-material-dropdown"
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Button,
+  InputAccessoryView,
+} from "react-native"
+
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
 import DropDownPicker from "react-native-dropdown-picker"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import ImagePicker from "react-native-image-picker"
 
 const RegisterScreen = ({ navigation }) => {
   const [first_name, setFirstName] = useState("")
@@ -23,10 +31,28 @@ const RegisterScreen = ({ navigation }) => {
     setImage(e.target.files[0])
   }
 
+  // const createUser = () => {
+  //   fetch("http://192.168.0.135:4001/users", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: bodyFormData,
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data)
+  //       logMeIn(data)
+  //     })
+  //     .catch((error) => {
+  //       console.error(error)
+  //     })
+  // }
+
   const createUser = async () => {
     let response
     try {
-      response = await fetch("http://localhost:4001/users", {
+      response = await fetch("http://192.168.0.135:4001/users", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -44,10 +70,10 @@ const RegisterScreen = ({ navigation }) => {
 
       const resData = await response.json()
 
-      console.log(resData[0].first_name)
-
       logMeIn(resData)
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -100,13 +126,14 @@ const RegisterScreen = ({ navigation }) => {
           defaultValue={birthday}
         />
       </View>
-      <TouchableOpacity>
-        <Button title='Register' onPress={() => createUser()} />
-      </TouchableOpacity>
+
+      <Button title='fuck me' onPress={async () => await createUser()} />
+
       <Text></Text>
       <Text></Text>
       <Text></Text>
       <Text style={styles.loginText}>Already a User? Login instead</Text>
+
       <Button title='Login' onPress={() => navigation.navigate("Login")} />
     </View>
   )

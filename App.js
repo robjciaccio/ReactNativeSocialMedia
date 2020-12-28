@@ -1,21 +1,15 @@
-import { StatusBar } from "expo-status-bar"
-import React, { useContext } from "react"
-import { StyleSheet, Text, View } from "react-native"
-import { Picker } from "@react-native-picker/picker"
-import { NavigationContainer } from "@react-navigation/native"
-import { createStackNavigator, StackView } from "@react-navigation/stack"
-import MainNavigation from "./Navigation/MainNavigation"
+import React from "react"
+import { StyleSheet } from "react-native"
 import BottomNavBar from "./Navigation/BottomNavBar"
-import { Context } from "./Context"
+
 import { ContextProvider } from "./Context"
-import LoginScreen from "./screens/LoginScreen"
-import RegisterScreen from "./screens/RegisterScreen"
+
 import "react-native-gesture-handler"
 
 export default function App() {
   return (
     <ContextProvider>
-      <MainNavigation />
+      <BottomNavBar />
     </ContextProvider>
   )
 }

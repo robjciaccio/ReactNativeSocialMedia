@@ -1,12 +1,10 @@
 import React, { useContext } from "react"
 import { View, Text, StyleSheet, Button } from "react-native"
 import { Context } from "../Context"
-import { NavigationContainer } from "@react-navigation/native"
-import { createStackNavigator } from "@react-navigation/stack"
-import BottomNavBar from "../Navigation/BottomNavBar"
 
 const HomeScreen = ({ navigation }) => {
   const { first_name } = useContext(Context)
+
   return (
     <View style={styles.screen}>
       <Text>{`${first_name}'s home page`}</Text>
@@ -17,12 +15,6 @@ const HomeScreen = ({ navigation }) => {
     </View>
   )
 }
-
-// HomeScreen.navigationOptions = (navData) => {
-//   return {
-//     headerTitle: "Home",
-//   }
-// }
 
 const styles = StyleSheet.create({
   screen: {
