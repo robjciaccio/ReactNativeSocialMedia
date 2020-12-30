@@ -1,19 +1,15 @@
 import React, { useEffect, useState, useContext } from "react"
 import { Context } from "../Context"
+import * as ImagePicker from "expo-image-picker"
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
   Button,
-  InputAccessoryView,
+  Image,
+  ActivityIndicator,
 } from "react-native"
-
-import { NavigationContainer } from "@react-navigation/native"
-import { createStackNavigator } from "@react-navigation/stack"
-import DropDownPicker from "react-native-dropdown-picker"
-import { TouchableOpacity } from "react-native-gesture-handler"
-import ImagePicker from "react-native-image-picker"
 
 const RegisterScreen = ({ navigation }) => {
   const [first_name, setFirstName] = useState("")
@@ -22,62 +18,132 @@ const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [birthday, setBirthday] = useState()
+  const [image, setImage] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const { logMeIn } = useContext(Context)
 
-  let userId, token
+  useEffect(() => {
+    ;(async () => {
+      if (Platform.OS !== "web") {
+        const {
+          status,
+        } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!")
+        }
+      }
+    })()
+  }, [])
 
-  const imageHandler = (e) => {
-    setImage(e.target.files[0])
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    })
+
+    console.log(result)
+    result ? setImage(result) : setImage(null)
   }
 
-  // const createUser = () => {
-  //   fetch("http://192.168.0.135:4001/users", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: bodyFormData,
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data)
-  //       logMeIn(data)
-  //     })
-  //     .catch((error) => {
-  //       console.error(error)
-  //     })
-  // }
-
-  const createUser = async () => {
+  const handlePhoto = async () => {
     let response
+    let localUri = image.uri
+    let filename = localUri.split("/").pop()
+
+    let match = /\.(\w+)$/.exec(filename)
+    let type = match ? `image/${match[1]}` : `image`
+
     try {
-      response = await fetch("http://192.168.0.135:4001/users", {
+      const formData = new FormData()
+      formData.append("image", { uri: localUri, name: filename })
+      formData.append("first_name", first_name)
+      formData.append("last_name", last_name)
+      formData.append("email", email)
+      formData.append("password", password)
+      formData.append("birthdate", birthday)
+      formData.append("username", username)
+      response = await fetch("http://192.168.1.106:4001/users/image", {
         method: "POST",
+        body: formData,
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          "content-type": "multipart/form-data",
         },
-        body: JSON.stringify({
-          first_name: first_name,
-          last_name: last_name,
-          email: email,
-          password: password,
-          birthdate: birthday,
-          username: username,
-        }),
       })
-
       const resData = await response.json()
+      console.log(formData)
+      console.log(resData)
 
-      logMeIn(resData)
-    } catch (error) {
-      console.log(error)
+      setImage(null)
+    } catch (err) {
+      console.log(err)
     }
   }
 
-  return (
+  let userId, token
+
+  const createUser = async () => {
+    setIsLoading(true)
+    let localUri = image.uri
+    let filename = localUri.split("/").pop()
+
+    let match = /\.(\w+)$/.exec(filename)
+    let type = match ? `image/${match[1]}` : `image`
+    let response
+    try {
+      const formData = new FormData()
+      formData.append("image", { uri: localUri, name: filename })
+      formData.append("first_name", first_name)
+      formData.append("last_name", last_name)
+      formData.append("email", email)
+      formData.append("password", password)
+      formData.append("birthdate", birthday)
+      formData.append("username", username)
+      formData.append("imageUri", image.uri)
+      response = await fetch("http://192.168.0.135:4001/users/register", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      })
+
+      const resData = await response.json()
+      console.log(resData)
+
+      setImage(null)
+      logMeIn(resData)
+      handlePhoto()
+      setIsLoading(false)
+    } catch (error) {
+      console.log(error)
+      setIsLoading(false)
+    }
+  }
+
+  return isLoading ? (
     <View style={styles.screen}>
+      <ActivityIndicator size='large' color='#00ff00' />
+    </View>
+  ) : (
+    <View style={styles.screen}>
+      <View style={styles.profileCard}>
+        {image ? (
+          <View>
+            <Image source={{ uri: image.uri }} style={styles.cirleImage} />
+            <Button title='edit' onPress={async () => await pickImage()} />
+          </View>
+        ) : (
+          <View>
+            <Button
+              title='Select Profile Photo'
+              onPress={async () => await pickImage()}
+            />
+          </View>
+        )}
+      </View>
       <View style={styles.form}>
         <TextInput
           style={{ height: 40 }}
@@ -127,7 +193,7 @@ const RegisterScreen = ({ navigation }) => {
         />
       </View>
 
-      <Button title='fuck me' onPress={async () => await createUser()} />
+      <Button title='Register' onPress={async () => await createUser()} />
 
       <Text></Text>
       <Text></Text>
@@ -140,6 +206,17 @@ const RegisterScreen = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
+  profileCard: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cirleImage: {
+    width: 110,
+    height: 110,
+    borderRadius: 400 / 2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   screen: {
     flex: 1,
     justifyContent: "center",
@@ -151,6 +228,7 @@ const styles = StyleSheet.create({
     borderColor: `#add8e6`,
     borderWidth: 1,
     justifyContent: "center",
+    backgroundColor: "white",
   },
   loginText: {
     textAlign: "center",

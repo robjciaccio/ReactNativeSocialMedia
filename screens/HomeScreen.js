@@ -1,18 +1,17 @@
 import React, { useContext } from "react"
-import { View, Text, StyleSheet, Button } from "react-native"
+import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native"
 import { Context } from "../Context"
+import PostButton from "../components/PostButton"
 
 const HomeScreen = ({ navigation }) => {
   const { first_name } = useContext(Context)
 
   return (
-    <View style={styles.screen}>
-      <Text>{`${first_name}'s home page`}</Text>
-      <Button
-        title='go to Profile'
-        onPress={() => navigation.navigate("Profile")}
-      />
-    </View>
+    <TouchableOpacity onPress={() => navigation.navigate("Post")}>
+      <View style={styles.screen}>
+        <PostButton />
+      </View>
+    </TouchableOpacity>
   )
 }
 

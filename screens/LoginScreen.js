@@ -1,16 +1,25 @@
 import React, { useState, useContext } from "react"
-import { View, Text, StyleSheet, Button, TextInput } from "react-native"
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  TextInput,
+  ActivityIndicator,
+} from "react-native"
 
 import { Context } from "../Context"
 
 const NotificationScreen = ({ navigation }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
-  const { logMeIn } = useContext(Context)
+  const { logInCurrent } = useContext(Context)
 
   const loginUser = async () => {
-    const respone = await fetch("http://localhost:4001/users/login", {
+    setIsLoading(true)
+    const respone = await fetch("http://192.168.0.135:4001/users/login", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -29,14 +38,15 @@ const NotificationScreen = ({ navigation }) => {
     if (!resData) {
       console.log("No")
     }
-    logMeIn(resData)
+    logInCurrent(resData)
+    setIsLoading(false)
   }
-  return (
+  return isLoading ? (
     <View style={styles.screen}>
-      <Button
-        title='Register'
-        onPress={() => navigation.navigate("Register")}
-      />
+      <ActivityIndicator size='large' color='#00ff00' />
+    </View>
+  ) : (
+    <View style={styles.screen}>
       <View style={styles.form}>
         <TextInput
           style={{ height: 40 }}
@@ -53,7 +63,17 @@ const NotificationScreen = ({ navigation }) => {
           defaultValue={password}
         />
       </View>
-      <Button title='Log In' onPress={() => loginUser()} />
+      <View style={{ paddingBottom: 40 }}>
+        <Button title='Log In' onPress={() => loginUser()} />
+      </View>
+
+      <View style={{ paddingTop: 40, alignItems: "center" }}>
+        <Text>Don't Have a Login?</Text>
+        <Button
+          title='Register'
+          onPress={() => navigation.navigate("Register")}
+        />
+      </View>
     </View>
   )
 }
@@ -70,6 +90,7 @@ const styles = StyleSheet.create({
     borderColor: `#add8e6`,
     borderWidth: 1,
     justifyContent: "center",
+    backgroundColor: "white",
   },
 })
 

@@ -21,12 +21,28 @@ const ContextProvider = ({ children }) => {
     setEmail(resData[0].email)
     setPassword(resData[0].password)
     setBirthday(resData[0].birthdate)
+    setImage(resData[0].profile_photo)
     jsonData = JSON.stringify(resData)
     console.log(jsonData)
     await AsyncStorage.setItem("userData", jsonData)
     setLoggedIn(true)
   }
   console.log(loggedIn)
+
+  const logInCurrent = async (resData) => {
+    console.log(resData)
+    setFirstName(resData.first_name)
+    setLastName(resData.last_name)
+    setUsername(resData.username)
+    setEmail(resData.email)
+    setPassword(resData.password)
+    setBirthday(resData.birthdate)
+    setImage(resData.profile_photo)
+    jsonData = JSON.stringify(resData)
+    console.log(jsonData)
+    await AsyncStorage.setItem("userData", jsonData)
+    setLoggedIn(true)
+  }
 
   useEffect(() => {
     const getData = async () => {
@@ -46,6 +62,10 @@ const ContextProvider = ({ children }) => {
     getData()
   }, [])
 
+  const logOut = () => {
+    setLoggedIn(false)
+  }
+
   return (
     <Context.Provider
       value={{
@@ -54,7 +74,10 @@ const ContextProvider = ({ children }) => {
         logMeIn,
         loggedIn,
         first_name,
+        last_name,
         username,
+        logInCurrent,
+        logOut,
       }}
     >
       {children}

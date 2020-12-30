@@ -1,6 +1,7 @@
 import React, { useContext } from "react"
 import { createStackNavigator } from "@react-navigation/stack"
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native"
+import { NavigationContainer } from "@react-navigation/native"
 import RegisterScreen from "../screens/RegisterScreen"
 import LoginScreen from "../screens/LoginScreen"
 import { Context } from "../Context"
@@ -21,28 +22,30 @@ const AuthNavigation = () => {
   const { loggedIn } = useContext(Context)
 
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name='Register'
-        component={RegisterScreen}
-        options={({ route }) => ({
-          headerTitle: getHeaderTitle(route),
-          headerTitleStyle: {
-            color: "#ff1493",
-          },
-        })}
-      />
-      <Stack.Screen
-        name='Login'
-        component={LoginScreen}
-        options={({ route }) => ({
-          headerTitle: getHeaderTitle(route),
-          headerTitleStyle: {
-            color: "#ff1493",
-          },
-        })}
-      />
-    </Stack.Navigator>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name='Login'
+          component={LoginScreen}
+          options={({ route }) => ({
+            headerTitle: getHeaderTitle(route),
+            headerTitleStyle: {
+              color: "#ff1493",
+            },
+          })}
+        />
+        <Stack.Screen
+          name='Register'
+          component={RegisterScreen}
+          options={({ route }) => ({
+            headerTitle: getHeaderTitle(route),
+            headerTitleStyle: {
+              color: "#ff1493",
+            },
+          })}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }
 

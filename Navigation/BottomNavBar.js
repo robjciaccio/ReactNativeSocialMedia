@@ -1,18 +1,25 @@
-import * as React from "react"
+import React, { useContext } from "react"
 import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { createStackNavigator } from "@react-navigation/stack"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import NotificationStackScreen from "./NotificationStackScreen"
 import HomeStackScreen from "./HomeStackScreen"
 import ProfileStackScreen from "./ProfileStackScreen"
 import ShoppingStackScreen from "./ShoppingStackScreen"
+import PostStackScreen from "./PostStackScreen"
+import AuthNavigation from "./LoginNav"
+import { Context } from "../Context"
 
-import ImageStackScreen from "./ImageStackScreen"
+import PostScreen from "../screens/PostScreen"
 
 const BottomNavBar = ({ navigation }) => {
   const Tab = createBottomTabNavigator()
+  const Stack = createStackNavigator()
 
-  return (
+  const { loggedIn, inPostMode } = useContext(Context)
+
+  return loggedIn ? (
     <NavigationContainer>
       <Tab.Navigator
         options={({ route }) => ({
@@ -30,8 +37,8 @@ const BottomNavBar = ({ navigation }) => {
               iconName = "notifications-outline"
             } else if (route.name === "Shopping") {
               iconName = "card-outline"
-            } else if (route.name === "Image Upload") {
-              iconName = "image-outline"
+            } else if (route.name === "Post") {
+              iconName = "pencil-outline"
             }
             return <Ionicons name={iconName} size={size} color={color} />
           },
@@ -50,11 +57,13 @@ const BottomNavBar = ({ navigation }) => {
       >
         <Tab.Screen name='Home' component={HomeStackScreen} />
         <Tab.Screen name='Profile' component={ProfileStackScreen} />
+        <Tab.Screen name='Post' component={PostStackScreen} />
         <Tab.Screen name='Notifications' component={NotificationStackScreen} />
         <Tab.Screen name='Shopping' component={ShoppingStackScreen} />
-        <Tab.Screen name='Image Upload' component={ImageStackScreen} />
       </Tab.Navigator>
     </NavigationContainer>
+  ) : (
+    <AuthNavigation />
   )
 }
 
