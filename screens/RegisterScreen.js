@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react"
 import { Context } from "../Context"
 import * as ImagePicker from "expo-image-picker"
+
 import {
   View,
   Text,
@@ -21,7 +22,7 @@ const RegisterScreen = ({ navigation }) => {
   const [image, setImage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  const { logMeIn } = useContext(Context)
+  const { logMeIn, ipAdress } = useContext(Context)
 
   useEffect(() => {
     ;(async () => {
@@ -48,42 +49,6 @@ const RegisterScreen = ({ navigation }) => {
     result ? setImage(result) : setImage(null)
   }
 
-  const handlePhoto = async () => {
-    let response
-    let localUri = image.uri
-    let filename = localUri.split("/").pop()
-
-    let match = /\.(\w+)$/.exec(filename)
-    let type = match ? `image/${match[1]}` : `image`
-
-    try {
-      const formData = new FormData()
-      formData.append("image", { uri: localUri, name: filename })
-      formData.append("first_name", first_name)
-      formData.append("last_name", last_name)
-      formData.append("email", email)
-      formData.append("password", password)
-      formData.append("birthdate", birthday)
-      formData.append("username", username)
-      response = await fetch("http://192.168.1.106:4001/users/image", {
-        method: "POST",
-        body: formData,
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      })
-      const resData = await response.json()
-      console.log(formData)
-      console.log(resData)
-
-      setImage(null)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  let userId, token
-
   const createUser = async () => {
     setIsLoading(true)
     let localUri = image.uri
@@ -102,7 +67,8 @@ const RegisterScreen = ({ navigation }) => {
       formData.append("birthdate", birthday)
       formData.append("username", username)
       formData.append("imageUri", image.uri)
-      response = await fetch("http://192.168.0.135:4001/users/register", {
+      console.log(formData)
+      response = await fetch(`http://${ipAdress}:4001/users/register`, {
         method: "POST",
         body: formData,
         headers: {
@@ -111,11 +77,10 @@ const RegisterScreen = ({ navigation }) => {
       })
 
       const resData = await response.json()
-      console.log(resData)
 
       setImage(null)
       logMeIn(resData)
-      handlePhoto()
+
       setIsLoading(false)
     } catch (error) {
       console.log(error)

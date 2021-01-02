@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Button, Image } from "react-native"
 import { Context } from "../Context"
 
 const PhotoCircle = ({ image }) => {
-  console.log(image)
   return (
     <View style={styles.screen}>
       <View>

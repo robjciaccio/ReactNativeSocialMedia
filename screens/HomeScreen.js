@@ -1,23 +1,27 @@
-import React, { useContext } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native"
 import { Context } from "../Context"
 import PostButton from "../components/PostButton"
+import Post from "../components/Post"
 
 const HomeScreen = ({ navigation }) => {
-  const { first_name } = useContext(Context)
+  const { first_name, user_id } = useContext(Context)
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("Post")}>
-      <View style={styles.screen}>
-        <PostButton />
-      </View>
-    </TouchableOpacity>
+    <View>
+      <TouchableOpacity onPress={() => navigation.navigate("Post")}>
+        <View style={styles.screen}>
+          <PostButton />
+        </View>
+      </TouchableOpacity>
+      <View style={styles.screen}></View>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1,
+    position: "relative",
     justifyContent: "center",
   },
 })

@@ -1,24 +1,64 @@
-import React, { useContext, useLayoutEffect } from "react"
-import { View, Text, StyleSheet, Button, Image, ScrollView } from "react-native"
+import React, { useContext, useLayoutEffect, useEffect, useState } from "react"
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  Image,
+  ScrollView,
+  FlatList,
+  ActivityIndicator,
+  _ScrollView,
+} from "react-native"
 import { Context } from "../Context"
+import Post from "../components/Post"
 import ProfileCard from "../components/ProfileCard"
+import { AppLoading } from "expo-app-loading"
 
 const ProfileScreen = ({ navigation }) => {
-  const { first_name, last_name, username, logOut, image } = useContext(Context)
+  // const [isLoading, setIsLoading] = useState(false)
+
+  const {
+    first_name,
+    last_name,
+    username,
+    logOut,
+    image,
+    user_id,
+    ipAdress,
+    posts,
+    setPosts,
+    isLoading,
+
+    fetchPosts,
+  } = useContext(Context)
+
+  let mappedPosts
+
+  useEffect(() => {
+    fetchPosts()
+  }, [])
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => <Button title='Log Out' onPress={() => logOut()} />,
+      headerRight: () => <Button title='LogOut' onPress={() => logOut()} />,
     })
   }, [navigation])
 
-  return (
-    <ScrollView style={styles.screen}>
-      <ProfileCard
-        image={image}
-        first_name={first_name}
-        last_name={last_name}
-      />
+  return isLoading ? (
+    <View style={styles.screen}>
+      <ActivityIndicator size='large' color='#00ff00' />
+    </View>
+  ) : (
+    <ScrollView>
+      <View>
+        <Post
+          first_name={first_name}
+          last_name={last_name}
+          image={image}
+          posts={posts}
+        />
+      </View>
     </ScrollView>
   )
 }

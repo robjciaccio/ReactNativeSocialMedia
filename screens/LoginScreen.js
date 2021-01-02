@@ -15,11 +15,11 @@ const NotificationScreen = ({ navigation }) => {
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  const { logInCurrent } = useContext(Context)
+  const { logInCurrent, ipAdress } = useContext(Context)
 
   const loginUser = async () => {
     setIsLoading(true)
-    const respone = await fetch("http://192.168.0.135:4001/users/login", {
+    const respone = await fetch(`http://${ipAdress}:4001/users/login`, {
       method: "POST",
       headers: {
         Accept: "application/json",

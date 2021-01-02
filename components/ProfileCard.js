@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Button, Image } from "react-native"
 import { Context } from "../Context"
 
 const ProfileCard = ({ first_name, last_name, image }) => {
-  console.log(image)
   return (
     <View style={styles.screen}>
       <View>
