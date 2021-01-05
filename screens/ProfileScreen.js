@@ -16,7 +16,11 @@ import ProfileCard from "../components/ProfileCard"
 import { AppLoading } from "expo-app-loading"
 
 const ProfileScreen = ({ navigation }) => {
-  // const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  setTimeout(() => {
+    setIsLoading(false)
+  }, 1500)
 
   const {
     first_name,
@@ -28,7 +32,6 @@ const ProfileScreen = ({ navigation }) => {
     ipAdress,
     posts,
     setPosts,
-    isLoading,
 
     fetchPosts,
   } = useContext(Context)
@@ -57,6 +60,7 @@ const ProfileScreen = ({ navigation }) => {
           last_name={last_name}
           image={image}
           posts={posts}
+          navigation={navigation}
         />
       </View>
     </ScrollView>

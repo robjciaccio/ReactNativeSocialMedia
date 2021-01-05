@@ -7,7 +7,9 @@ const ProfileCard = ({ first_name, last_name, image }) => {
     <View style={styles.screen}>
       <View>
         <Image source={{ uri: image }} style={styles.cirleImage} />
-        <Text style={styles.nameText}>{`${first_name} ${last_name}`}</Text>
+      </View>
+      <View style={styles.nameText}>
+        <Text style={styles.text}>{`${first_name} ${last_name}`}</Text>
       </View>
     </View>
   )
@@ -15,22 +17,20 @@ const ProfileCard = ({ first_name, last_name, image }) => {
 
 const styles = StyleSheet.create({
   nameText: {
-    position: "absolute",
-    paddingTop: 15,
-    paddingLeft: 65,
-    flexDirection: "row",
-    display: "flex",
-    alignItems: "center",
     justifyContent: "center",
-    alignContent: "flex-end",
-    fontSize: 15,
-    fontWeight: "600",
+    paddingLeft: 7,
+    paddingRight: 10,
+  },
+  text: {
+    fontWeight: "200",
   },
   screen: {
     width: "65%",
+    flexDirection: "row",
   },
   cirleImage: {
     marginLeft: 6,
+
     width: 50,
     height: 50,
     borderRadius: 400 / 2,

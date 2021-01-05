@@ -8,6 +8,7 @@ import NotificationScreen from "../screens/NotificationsScreen"
 import ShoppingScreen from "../screens/ShoppingScreen"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { createStackNavigator } from "@react-navigation/stack"
+import PhotoPreview from "../screens/PhotoPreview"
 
 const ProfileStack = createStackNavigator()
 
@@ -24,6 +25,7 @@ const ProfileStackScreen = () => {
           },
         }}
       />
+      <ProfileStack.Screen name='Preview' component={PhotoPreview} />
     </ProfileStack.Navigator>
   )
 }

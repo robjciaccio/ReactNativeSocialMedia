@@ -15,8 +15,14 @@ const ContextProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false)
   const [posts, setPosts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [prevImage, setPrevImage] = useState("")
+  const [allPosts, setAllPosts] = useState([])
+  const [allUsers, setAllUsers] = useState([])
+  const [likes, setLikes] = useState([])
 
   const ipAdress = "192.168.0.135"
+  // 192.168.0.135 downstairs
+  // 192.168.1.106 upstairs
 
   const logMeIn = async (resData) => {
     console.log(resData[0])
@@ -50,6 +56,25 @@ const ContextProvider = ({ children }) => {
     setLoggedIn(true)
   }
 
+  const fetchAllPosts = async () => {
+    const response = await fetch(`http://${ipAdress}:4001/posts/all`, {
+      type: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+    const resData = await response.json()
+
+    setAllPosts(resData)
+  }
+
+  const fetchLikes = async () => {
+    const response = await fetch(`http://${ipAdress}:4001/likes/all`, {
+      type: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+    const resData = await response.json()
+    setLikes(resData)
+  }
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -67,6 +92,10 @@ const ContextProvider = ({ children }) => {
     }
     getData()
   }, [])
+
+  const handlePreview = (previewImage) => {
+    setPrevImage(previewImage)
+  }
 
   const logOut = async () => {
     setLoggedIn(false)
@@ -93,6 +122,18 @@ const ContextProvider = ({ children }) => {
     setIsLoading(false)
   }
 
+  const fetchAllUsers = async () => {
+    setIsLoading(true)
+    const response = await fetch(`http://${ipAdress}:4001/users`, {
+      type: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+
+    const resData = await response.json()
+
+    setAllUsers(resData)
+  }
+
   return (
     <Context.Provider
       value={{
@@ -110,6 +151,14 @@ const ContextProvider = ({ children }) => {
         posts,
         setPosts,
         fetchPosts,
+        handlePreview,
+        prevImage,
+        fetchAllPosts,
+        allPosts,
+        fetchAllUsers,
+        allUsers,
+        fetchLikes,
+        likes,
       }}
     >
       {children}
