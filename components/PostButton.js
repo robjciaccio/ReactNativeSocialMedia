@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
   },
   screen: {
     width: "100%",
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 1,
+    // marginBottom: 10,
   },
 })
 

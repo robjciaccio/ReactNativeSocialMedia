@@ -13,21 +13,6 @@ const PhotoCircle = ({ image }) => {
 }
 
 const styles = StyleSheet.create({
-  nameText: {
-    position: "absolute",
-    paddingTop: 15,
-    paddingLeft: 65,
-    flexDirection: "row",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    alignContent: "flex-end",
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  screen: {
-    width: "65%",
-  },
   cirleImage: {
     marginLeft: 6,
     width: 50,
@@ -35,6 +20,7 @@ const styles = StyleSheet.create({
     borderRadius: 400 / 2,
     justifyContent: "center",
     alignItems: "center",
+    margin: 8,
   },
 })
 

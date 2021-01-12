@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext } from "react"
-import { Context } from "../Context"
-import * as ImagePicker from "expo-image-picker"
+import React, { useEffect, useState, useContext } from 'react'
+import { Context } from '../Context'
+import * as ImagePicker from 'expo-image-picker'
 
 import {
   View,
@@ -10,28 +10,28 @@ import {
   Button,
   Image,
   ActivityIndicator,
-} from "react-native"
+} from 'react-native'
 
 const RegisterScreen = ({ navigation }) => {
-  const [first_name, setFirstName] = useState("")
-  const [last_name, setLastName] = useState("")
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [first_name, setFirstName] = useState('')
+  const [last_name, setLastName] = useState('')
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [birthday, setBirthday] = useState()
-  const [image, setImage] = useState("")
+  const [image, setImage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   const { logMeIn, ipAdress } = useContext(Context)
 
   useEffect(() => {
     ;(async () => {
-      if (Platform.OS !== "web") {
+      if (Platform.OS !== 'web') {
         const {
           status,
         } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-        if (status !== "granted") {
-          alert("Sorry, we need camera roll permissions to make this work!")
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!')
         }
       }
     })()
@@ -52,27 +52,27 @@ const RegisterScreen = ({ navigation }) => {
   const createUser = async () => {
     setIsLoading(true)
     let localUri = image.uri
-    let filename = localUri.split("/").pop()
+    let filename = localUri.split('/').pop()
 
     let match = /\.(\w+)$/.exec(filename)
     let type = match ? `image/${match[1]}` : `image`
     let response
     try {
       const formData = new FormData()
-      formData.append("image", { uri: localUri, name: filename })
-      formData.append("first_name", first_name)
-      formData.append("last_name", last_name)
-      formData.append("email", email)
-      formData.append("password", password)
-      formData.append("birthdate", birthday)
-      formData.append("username", username)
-      formData.append("imageUri", image.uri)
+      formData.append('image', { uri: localUri, name: filename })
+      formData.append('first_name', first_name)
+      formData.append('last_name', last_name)
+      formData.append('email', email)
+      formData.append('password', password)
+      formData.append('birthdate', birthday)
+      formData.append('username', username)
+      formData.append('imageUri', image.uri)
       console.log(formData)
       response = await fetch(`http://${ipAdress}:4001/users/register`, {
-        method: "POST",
+        method: 'POST',
         body: formData,
         headers: {
-          "content-type": "multipart/form-data",
+          'content-type': 'multipart/form-data',
         },
       })
 
@@ -165,26 +165,26 @@ const RegisterScreen = ({ navigation }) => {
       <Text></Text>
       <Text style={styles.loginText}>Already a User? Login instead</Text>
 
-      <Button title='Login' onPress={() => navigation.navigate("Login")} />
+      <Button title='Login' onPress={() => navigation.navigate('Login')} />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   profileCard: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cirleImage: {
     width: 110,
     height: 110,
     borderRadius: 400 / 2,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   screen: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   form: {
     padding: 10,
@@ -192,11 +192,11 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: `#add8e6`,
     borderWidth: 1,
-    justifyContent: "center",
-    backgroundColor: "white",
+    justifyContent: 'center',
+    backgroundColor: 'white',
   },
   loginText: {
-    textAlign: "center",
+    textAlign: 'center',
   },
 })
 

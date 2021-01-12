@@ -1,27 +1,23 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from 'react'
 import {
   View,
   Text,
   StyleSheet,
-  Button,
-  TouchableOpacity,
   ActivityIndicator,
   ScrollView,
   Dimensions,
   Image,
-} from "react-native"
-import { Context } from "../Context"
-import PostButton from "../components/PostButton"
-import ProfileCard from "../components/ProfileCard"
-import Post from "../components/Post"
-import Interaction from "../components/Interaction"
+  TouchableWithoutFeedback,
+} from 'react-native'
+import { Context } from '../Context'
+import ProfileCard from '../components/ProfileCard'
+import Interaction from '../components/Interaction'
 
-const { width } = Dimensions.get("window")
+const { width } = Dimensions.get('window')
 
 const HomeScreen = ({ navigation }) => {
   const {
     user_id,
-    ipAdress,
     fetchAllPosts,
     allPosts,
     fetchAllUsers,
@@ -42,63 +38,75 @@ const HomeScreen = ({ navigation }) => {
     fetchAllUsers()
   }, [])
 
-  let foundUser
-  let foundLikes
-
   return isLoading ? (
     <View>
       <ActivityIndicator />
     </View>
   ) : (
     <View>
-      <View>
-        <TouchableOpacity onPress={() => navigation.navigate("Post")}>
-          <View style={styles.screen}>
-            <PostButton />
-          </View>
-        </TouchableOpacity>
-      </View>
       <ScrollView>
         {allPosts.map((post, i) => {
-          foundUser = allUsers.find((user) => user.id == post.user_id)
-          foundLikes = likes.filter((like) => like.post_id == post.id)
-
+          let foundUser = allUsers.find((user) => user.id == post.user_id)
           return (
             <View key={i} style={styles.postBox}>
               <View>
-                <ProfileCard
-                  first_name={foundUser.first_name}
-                  last_name={foundUser.last_name}
-                  image={foundUser.profile_photo}
-                />
+                <TouchableWithoutFeedback
+                  onPress={() =>
+                    navigation.navigate('Friend', {
+                      first_name: foundUser.first_name,
+                      last_name: foundUser.last_name,
+                      image: foundUser.profile_photo,
+                      userID: foundUser.id,
+                    })
+                  }
+                >
+                  <View>
+                    <ProfileCard
+                      first_name={foundUser.first_name}
+                      last_name={foundUser.last_name}
+                      image={foundUser.profile_photo}
+                      navigation={navigation}
+                    />
+                  </View>
+                </TouchableWithoutFeedback>
               </View>
               <View style={styles.shade}>
                 <View>
                   <Text style={styles.content}>{post.content}</Text>
                 </View>
-                <View>
-                  <View style={styles.postPhoto}>
+                <TouchableWithoutFeedback
+                  onPress={() =>
+                    navigation.navigate('Comment', {
+                      user_id: user_id,
+                      post_id: post.id,
+                      postUserId: post.user_id,
+                      image: post.photo,
+                      content: post.content,
+                      title: foundUser.first_name,
+                    })
+                  }
+                >
+                  <View>
                     {post.photo ? (
                       <Image
                         source={{ uri: post.photo }}
                         style={styles.photo}
-                        pinchGestureEnabled={true}
+                        disabled={true}
                       />
                     ) : null}
                   </View>
+                </TouchableWithoutFeedback>
+                <View>
+                  <Interaction
+                    post_id={post.id}
+                    user_id={user_id}
+                    image={post.photo}
+                    navigation={navigation}
+                    postUserId={post.user_id}
+                    content={post.content}
+                  />
+                  <View style={styles.bottomBorder}></View>
                 </View>
-                {foundLikes.length > 0 ? (
-                  <View>
-                    <Text
-                      style={styles.heart}
-                    >{`❤️ ${foundLikes.length}`}</Text>
-                    <Interaction post_id={post.id} user_id={user_id} />
-                  </View>
-                ) : (
-                  <View>
-                    <Interaction post_id={post.id} user_id={user_id} />
-                  </View>
-                )}
               </View>
             </View>
           )
@@ -111,9 +119,19 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   screen: {
-    position: "relative",
-    justifyContent: "center",
+    position: 'relative',
+    justifyContent: 'center',
   },
+  bottomBorder: {
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 10,
+    marginBottom: 10,
+    opacity: 0.2,
+  },
+
   heart: {
     paddingLeft: 6,
     marginTop: 5,
@@ -126,20 +144,16 @@ const styles = StyleSheet.create({
   postBox: {
     marginTop: 10,
     paddingTop: 7,
-    backgroundColor: `#dcdcdc`,
   },
-
   content: {
     paddingLeft: 10,
-    // backgroundColor: "pink",
-
-    width: "80%",
+    width: '80%',
     height: 40,
     paddingTop: 17,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   postPhoto: {
-    alignItems: "center",
+    alignItems: 'center',
   },
 })
 

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext } from 'react'
 import {
   View,
   Text,
@@ -6,13 +6,13 @@ import {
   Button,
   TextInput,
   ActivityIndicator,
-} from "react-native"
+} from 'react-native'
 
-import { Context } from "../Context"
+import { Context } from '../Context'
 
 const NotificationScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   const { logInCurrent, ipAdress } = useContext(Context)
@@ -20,10 +20,10 @@ const NotificationScreen = ({ navigation }) => {
   const loginUser = async () => {
     setIsLoading(true)
     const respone = await fetch(`http://${ipAdress}:4001/users/login`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         username: username,
@@ -36,7 +36,7 @@ const NotificationScreen = ({ navigation }) => {
     console.log(resData)
 
     if (!resData) {
-      console.log("No")
+      console.log('No')
     }
     logInCurrent(resData)
     setIsLoading(false)
@@ -67,11 +67,11 @@ const NotificationScreen = ({ navigation }) => {
         <Button title='Log In' onPress={() => loginUser()} />
       </View>
 
-      <View style={{ paddingTop: 40, alignItems: "center" }}>
+      <View style={{ paddingTop: 40, alignItems: 'center' }}>
         <Text>Don't Have a Login?</Text>
         <Button
           title='Register'
-          onPress={() => navigation.navigate("Register")}
+          onPress={() => navigation.navigate('Register')}
         />
       </View>
     </View>
@@ -81,7 +81,7 @@ const NotificationScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   form: {
     padding: 10,
@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: `#add8e6`,
     borderWidth: 1,
-    justifyContent: "center",
-    backgroundColor: "white",
+    justifyContent: 'center',
+    backgroundColor: 'white',
   },
 })
 

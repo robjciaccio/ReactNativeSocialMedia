@@ -16,23 +16,20 @@ import Interaction from '../components/Interaction'
 
 import ProfileScreenCard from '../components/ProfileScreenCard'
 
-const ProfileScreen = ({ navigation, route }) => {
+const ProfileVisitScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(true)
+  const [posts, setPosts] = useState([])
+  const { first_name, last_name, image, userID } = route.params
 
   setTimeout(() => {
     setIsLoading(false)
-  }, 1500)
+  }, 1000)
 
   const {
-    first_name,
-    last_name,
     username,
     logOut,
-    image,
     user_id,
     ipAdress,
-    posts,
-    setPosts,
 
     fetchPosts,
   } = useContext(Context)
@@ -40,6 +37,15 @@ const ProfileScreen = ({ navigation, route }) => {
   let mappedPosts
 
   useEffect(() => {
+    const getPostsByUid = async () => {
+      const response = await fetch(`http://${ipAdress}:4001/posts/${userID}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      const resData = await response.json()
+      setPosts(resData)
+    }
+    getPostsByUid()
     fetchPosts()
   }, [])
 
@@ -55,14 +61,15 @@ const ProfileScreen = ({ navigation, route }) => {
     </View>
   ) : (
     <View>
-      <ProfileScreenCard
-        image={image}
-        first_name={first_name}
-        last_name={last_name}
-      />
-
-      <ScrollView>
-        <View style={styles.screen}>
+      <View>
+        <ProfileScreenCard
+          image={image}
+          first_name={first_name}
+          last_name={last_name}
+        />
+      </View>
+      <View style={styles.screen}>
+        <ScrollView>
           <Post
             first_name={first_name}
             last_name={last_name}
@@ -70,8 +77,8 @@ const ProfileScreen = ({ navigation, route }) => {
             posts={posts}
             navigation={navigation}
           />
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </View>
   )
 }
@@ -81,4 +88,4 @@ const styles = StyleSheet.create({
     // marginTop: 100,
   },
 })
-export default ProfileScreen
+export default ProfileVisitScreen

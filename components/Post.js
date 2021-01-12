@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react"
+import React, { useEffect, useState, useContext } from 'react'
 import {
   View,
   Text,
@@ -8,12 +8,14 @@ import {
   TouchableOpacity,
   Dimensions,
   Animated,
-} from "react-native"
-import ProfileCard from "./ProfileCard"
-import { Context } from "../Context"
-import PhotoPreview from "../screens/PhotoPreview"
+} from 'react-native'
+import ProfileCard from './ProfileCard'
+import { Context } from '../Context'
+import PhotoPreview from '../screens/PhotoPreview'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import Interaction from '../components/Interaction'
 
-const { width } = Dimensions.get("window")
+const { width } = Dimensions.get('window')
 
 const Post = ({ first_name, last_name, image, posts, navigation }) => {
   const [users, setUsers] = useState([])
@@ -22,7 +24,7 @@ const Post = ({ first_name, last_name, image, posts, navigation }) => {
   const { user_id, handlePreview } = useContext(Context)
 
   const extraHandlePreview = (image) => {
-    navigation.navigate("Preview")
+    navigation.navigate('Preview')
     handlePreview(image)
   }
 
@@ -42,13 +44,32 @@ const Post = ({ first_name, last_name, image, posts, navigation }) => {
             <View>
               <Text style={styles.content}>{post.content}</Text>
             </View>
-            <TouchableOpacity onPress={() => extraHandlePreview(post.photo)}>
+            <TouchableWithoutFeedback
+              onPress={() =>
+                navigation.navigate('Comment', {
+                  user_id: user_id,
+                  post_id: post.id,
+                  postUserId: post.user_id,
+                  image: post.photo,
+                  content: post.content,
+                })
+              }
+            >
               <View style={styles.postPhoto}>
                 {post.photo ? (
                   <Image source={{ uri: post.photo }} style={styles.photo} />
                 ) : null}
               </View>
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
+            <Interaction
+              post_id={post.id}
+              user_id={user_id}
+              image={post.photo}
+              navigation={navigation}
+              postUserId={post.user_id}
+              content={post.content}
+            />
+            <View style={styles.bottomBorder}></View>
           </View>
         )
       })}
@@ -57,9 +78,15 @@ const Post = ({ first_name, last_name, image, posts, navigation }) => {
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    marginTop: 20,
-    // paddingLeft: 29,
+  screen: {},
+  bottomBorder: {
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 10,
+    marginBottom: 10,
+    opacity: 0.2,
   },
   photo: {
     width: width,
@@ -70,16 +97,12 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingLeft: 10,
-    // backgroundColor: "pink",
-
-    width: "80%",
+    width: '80%',
     height: 40,
-    paddingTop: 17,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   postPhoto: {
-    alignItems: "center",
+    alignItems: 'center',
   },
 })
 

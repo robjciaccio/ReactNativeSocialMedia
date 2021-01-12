@@ -1,8 +1,9 @@
-import React, { useContext } from "react"
-import { View, Text, StyleSheet, Button, Image } from "react-native"
-import { Context } from "../Context"
+import React, { useContext } from 'react'
+import { View, Text, StyleSheet, Button, Image } from 'react-native'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import { Context } from '../Context'
 
-const ProfileCard = ({ first_name, last_name, image }) => {
+const ProfileCard = ({ first_name, last_name, image, navigation }) => {
   return (
     <View style={styles.screen}>
       <View>
@@ -17,25 +18,24 @@ const ProfileCard = ({ first_name, last_name, image }) => {
 
 const styles = StyleSheet.create({
   nameText: {
-    justifyContent: "center",
+    justifyContent: 'center',
     paddingLeft: 7,
     paddingRight: 10,
   },
   text: {
-    fontWeight: "200",
+    fontWeight: '200',
   },
   screen: {
-    width: "65%",
-    flexDirection: "row",
+    width: '65%',
+    flexDirection: 'row',
   },
   cirleImage: {
     marginLeft: 6,
-
     width: 50,
     height: 50,
     borderRadius: 400 / 2,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })
 
